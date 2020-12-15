@@ -13,7 +13,7 @@ app.use(
 app.use(bodyParser.json());
 
 app.use(express.static(__dirname + "/../react-client/dist"));
-
+//select all the profs that  we have in our database with an array of workers
 app.get("/api/profs", function (req, res) {
   console.log("here");
   db.selectAllProf(function (err, data) {
@@ -25,7 +25,7 @@ app.get("/api/profs", function (req, res) {
     }
   });
 });
-
+// the user and the worker login with the username and the password
 app.post("/login", (req, res) => {
   let givenPassword = req.body.password;
   console.log(req.body);
@@ -65,18 +65,22 @@ app.post("/login", (req, res) => {
     }
   });
 });
+
+//the user update
 app.put("/user/update", function (req, res) {
   db.updateUser(req.body.data, (data) => {
     console.log(data);
     res.send(data);
   });
 });
+//the worker update
 app.put("/worker/update", function (req, res) {
   db.updateWorker(req.body.data, (data) => {
     console.log(data);
     res.send(data);
   });
 });
+//Worker rigester
 app.post("/workerRegister", (req, res) => {
   console.log(req.body);
   var data = req.body.data;
@@ -90,6 +94,7 @@ app.post("/workerRegister", (req, res) => {
     }
   });
 });
+//user adds the order
 app.post("/addorder", (req, res) => {
   console.log(req.body);
   var data = req.body.data;
@@ -102,6 +107,7 @@ app.post("/addorder", (req, res) => {
     }
   });
 });
+// user register
 app.post("/userRegister", (req, res) => {
   console.log(req.body.data);
   db.addUser(req.body.data, (err, user) => {
@@ -113,7 +119,7 @@ app.post("/userRegister", (req, res) => {
     console.log("User created successfully");
   });
 });
-
+// select all the orders that we have in the database
 app.get("/orders", function (req, res) {
   db.selectAllOrders(function (err, data) {
     if (err) {
@@ -123,6 +129,8 @@ app.get("/orders", function (req, res) {
     }
   });
 });
+
+// select the worker orders with the state pending and the worker_id
 app.post("/api/orders/pending", function (req, res) {
   console.log(req.body.data);
   db.selectWorkerPandingOrders(req.body.data, function (err, data) {
@@ -134,6 +142,8 @@ app.post("/api/orders/pending", function (req, res) {
     }
   });
 });
+// select the worker orders with the state doing and the worker_id
+
 app.post("/api/orders/doing", function (req, res) {
   console.log(req.body.data);
   db.selectWorkerDoingOrders(req.body.data, function (err, data) {
@@ -145,6 +155,8 @@ app.post("/api/orders/doing", function (req, res) {
     }
   });
 });
+// select the worker orders with the state done and the worker_id
+
 app.post("/api/orders/done", function (req, res) {
   console.log(req.body.data);
   db.selectWorkerDoneOrders(req.body.data, function (err, data) {
@@ -156,6 +168,7 @@ app.post("/api/orders/done", function (req, res) {
     }
   });
 });
+// when the website get refreched the client sends a token and here the server checks if the token is valid
 app.post("/login/auth", function (req, res) {
   console.log(req.body.data);
   jwt.verify(req.body.data, "mysecrettoken", (err, data) => {
@@ -194,6 +207,9 @@ app.post("/login/auth", function (req, res) {
     }
   });
 });
+
+// select the user orders with the user_id
+
 app.post("/api/orders/user", function (req, res) {
   console.log(req.body.data);
   db.selectUserOrders(req.body.data, function (err, data) {
@@ -205,7 +221,7 @@ app.post("/api/orders/user", function (req, res) {
     }
   });
 });
-
+// whenever the worker check an order doneor acceptd it updates the state of that order
 app.put("/order/update", function (req, res) {
   console.log(req.body);
   db.updateOrder(req.body, function (err, data) {
